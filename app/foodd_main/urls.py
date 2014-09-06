@@ -1,5 +1,5 @@
 from django.conf import urls
-import views
+import foodd_main.views as views
 
 urlpatterns = urls.patterns(
   "",

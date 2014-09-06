@@ -2,7 +2,7 @@ from django import http
 from django.views import generic
 from django import shortcuts
 from django.core import serializers
-import models
+import foodd_main.models as models
 import json
 import os
 import urllib
