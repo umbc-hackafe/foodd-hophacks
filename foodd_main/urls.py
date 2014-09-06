@@ -1,6 +1,7 @@
 from django.conf import urls
+import views
 
 urlpatterns = urls.patterns(
   '',
-  urls.url(r'^$', urls.include('foodd_main.urls'))
+  urls.url(r'^$', views.home),
 )
