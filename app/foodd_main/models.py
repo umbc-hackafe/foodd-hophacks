@@ -1,6 +1,15 @@
 from django.db import models
 import django.contrib.auth.models as contrib_models
 
+class FooddUser(models.Model):
+    UNITS_CHOICES = (
+        ('M', 'Metric'),
+        ('I', 'Standard American Imperial'),
+        ('C', 'Cooking Units')
+    )
+    user = models.OneToOneField(contrib_models.User)
+    units = models.CharField(max_length=1, choices=UNITS_CHOICES, default='C')
+
 class Property(models.Model):
     name = models.CharField(max_length=32)
     description = models.CharField(max_length=128)
@@ -24,8 +33,8 @@ class Item(models.Model):
     description = models.CharField(max_length=128, blank=True)
 
 class Pantry(models.Model):
-    owner = models.ForeignKey(contrib_models.User)
-    members = models.ManyToManyField(contrib_models.User, through='PantryMembership', related_name='+')
+    owner = models.ForeignKey(FooddUser)
+    members = models.ManyToManyField(FooddUser, through='PantryMembership', related_name='+')
     items = models.ManyToManyField(Item, through='PantryItem')
 
 class PantryMembership(models.Model):
@@ -35,7 +44,7 @@ class PantryMembership(models.Model):
         ('O', 'Owner')
     )
     pantry = models.ForeignKey(Pantry)
-    user = models.ForeignKey(contrib_models.User)
+    user = models.ForeignKey(FooddUser)
     permissions = models.CharField(max_length=1, choices=PANTRY_PERMISSIONS_CHOICES)
 
 class PantryItem(models.Model):
