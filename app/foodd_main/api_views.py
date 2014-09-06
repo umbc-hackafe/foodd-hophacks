@@ -58,11 +58,13 @@ def PantryItemAdd(request):
         pantry=pantry, item=item, defaults={'remaining': count})
 
     if not created:
-        pantry_item.remaining += count
+        pantry_item.remaining += int(count)
 
     pantry_item.save()
 
-    return http.HttpResponse(serializers.serialize('json', pantry_item), content_type='application/json')
+    inner_item = serializers.serialize('json', [pantry_item.item])
+    logging.info(inner_item)
+    return http.HttpResponse(serializers.serialize('json', [pantry_item]), content_type='application/json')
 
 
 def PantryItemGet(request):

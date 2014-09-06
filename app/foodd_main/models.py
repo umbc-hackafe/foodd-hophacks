@@ -1,3 +1,6 @@
+import urllib
+from foodd_project import settings
+import json
 from django.db import models
 import django.contrib.auth.models as contrib_models
 import foodd_main.barcode as barcodelib
@@ -35,7 +38,7 @@ class Ingredient(models.Model):
 
 class Item(models.Model):
     ean = models.CharField(max_length=13, primary_key=True)
-    ingredient = models.ForeignKey(Ingredient)
+    ingredient = models.ForeignKey(Ingredient, null=True)
     size = models.IntegerField()
     description = models.CharField(max_length=128, blank=True)
     name = models.CharField(max_length=32)

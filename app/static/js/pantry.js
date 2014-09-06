@@ -1,17 +1,16 @@
-$.ready(function() {
+$(document).ready(function() {
     // Add a submit action to the Item Addition form
     $("#eanform").submit(function(event) {
 	event.preventDefault();
 
-	var ean = $(this).find("input[name='ean']").val();
-	var count = $(this).find("input[name='count']").val();
-	var pantry = $(this).find("input[name='pk']").val();
+	var vals = {};
+	$("#eanform :input").each(function(){vals[this.name]=$(this).val();});
 	
-	$.post($(this).attr('action'),
-	   {"ean": ean, "count": count, "pk": pantry}
-	  ).success(function(data) {
+	$.post($(this).attr('action'), vals)
+	    .success(function(data) {
+		console.log(data);
 	      // it returns: {remaining, item: {upc, name, description, ingredient: {name, properties[], unit, provides[]}}}
-	      var theItem = $("#ean" + data.itemean);
+	      var theItem = $("#ean" + data.item.ean);
 
 	      if (theItem.length) {
 		  theItem.find(".remaining").text("Number remaining: " + (data.item.remaining));
