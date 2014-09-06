@@ -2,15 +2,36 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>Pantry</h1>
+    <h1>{{ pantry.owner.first_name }}'s Pantry</h1>
 </div>
 <div class="list-group">
-    <p class="list-group-item active">Pantry Items</p>
+    <p class="list-group-item active">Items In This Pantry</p>
     {% for item in pantry_items %}
         <div class="list-group-item">
-            <p>Ingredient type: <a href={% url "ingredient" name=item.item.ingredient.name %}>{{ item.item.ingredient.name }}</a></p>
-            <p>Number remaining: {{ itme.remaining }}</p>
-            <p>Size: {{ item.item.size }}</p>
+            <h4 class="list-group-item-heading" type="button" data-toggle="collapse"
+                data-target="#ean{{ item.item.ean }}">Name: {{ item.item.name }}</h4>
+            <div id="ean{{ item.item.ean }}" class="collapse in">
+                <p>Ingredient type: {{ item.item.ingredient.name }}</p>
+                <p>Number remaining: {{ itme.remaining }}</p>
+                <p>Size: {{ item.item.size }} {{ item.item.ingredient.unit }}</p>
+                <p>EAN: {{ item.item.ean }}</p>
+                <p>Description: {{ item.item.description }}</p>
+                <p>Properties:</p>
+                <ul>
+                    {% for property in item.item.ingredient.properties %}
+                    <li>
+                        <p>Name: {{ property.name }}</p>
+                        <p>Description: {{ property.description }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <p>Provides:</p>
+                <ul>
+                    {% for ing in item.item.ingredient.provides %}
+                    <li>Name: {{ ing.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         <div>
     {% endfor %}
 </div>
