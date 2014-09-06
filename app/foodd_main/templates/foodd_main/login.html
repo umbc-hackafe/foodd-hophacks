@@ -1,3 +1,19 @@
 {% extends "foodd_main/base.html" %}
+{% load bootstrap3 %}
+
 {% block content %}
-{% endblock content %}
+
+    {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+
+    <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+        {% csrf_token %}
+
+	{% bootstrap_form form %}
+
+       <input type="submit" value="login" />
+       <input type="hidden" name="next" value="{{ next }}" />
+   </form>
+
+{% endblock %}
