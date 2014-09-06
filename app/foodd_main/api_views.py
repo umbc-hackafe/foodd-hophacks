@@ -1,46 +1,10 @@
 from django import http
 from django.core import exceptions
 from django.core import serializers
-import foodd_main.models as models
+from foodd_main import models
 import json
 
-def EANAdd(request):
-    # Get and normalize the EAN from the post request.
-    try:
-        ean = models.Item.to_ean(request.POST.get('ean'))
-    except models.Item.InvalidEAN:
-        return http.HttpResponseBadRequest()
-
-    # Create a response dictionary so whatever calls this can provide
-    # more information if necessary.
-    jresponse = {'ean': ean}
-
-    # At this point, check whether the Item exists already. If so, don't
-    # do anything.
-    try:
-        item = models.Item.objects.get(pk=ean)
-        jresponse['new'] = False
-        if item.description == None or item.size == None:
-            raise models.Items.NeedsIngredient("missing item data")
-        elif item.ingredient == None:
-            raise models.Items.NeedsData("missing item data")
-
-        return http.HttpResponse(json.dumps(jresponse))
-    except exceptions.ObjectDoesNotExist:
-        jresponse['new'] = True
-
-    try:
-        models.Item.ensure_present(ean)
-    except models.Item.NeedsIngredient:
-        jresponse['needs'] = 'ingredient'
-    except models.Item.NeedsData:
-        jresponse['needs'] = 'data'
-
-    # XXX: We should attach a Location header here, pointing to the new
-    # Item.
-    return http.HttpResponse(json.dumps(jresponse), status=201)
-
-def ItemComplete(request):
+def ItemAutocomplete(request):
     # Get the query string from the request.
     query = request.GET.get('q')
     suggestions = []
@@ -52,6 +16,40 @@ def ItemComplete(request):
                 matchset]
 
     return http.HttpResponse(json.dumps(suggestions))
+
+def PantryItemAdd(request):
+    # Get and normalize the EAN from the post request.
+    try:
+        ean = models.Item.to_ean(request.POST.get('ean'))
+    except models.Item.InvalidEAN:
+        return http.HttpResponseBadRequest()
+
+    count = request.POST.get('count')
+    if not count or count < 0:
+        return http.HttpResponseBadRequest()
+
+    try:
+        pantry = models.Pantry.objects.get(pk=request.POST.get('pk'))
+    except exceptions.ObjectDoesNotExist:
+        return http.HttpResponseBadRequest()
+
+    # At this point, check whether the Item exists already. If so, don't
+    # do anything.
+    item = models.Item.ensure_present(ean=ean)
+
+    if not item:
+        return http.HttpResponseBadRequest()
+
+    pantry_item, created = models.PantryItem.objects.get_or_create(
+        pantry=pantry, item=item, defaults={'remaining': count})
+
+    if not created:
+        pantry_item.remaining += count
+
+    pantry_item.save()
+
+    return http.HttpResponse(serializers.serialize('json', pantry_item), content_type='application/json')
+
 
 def PantryItemGet(request):
     # Get the Pantry ID from the request.
@@ -66,4 +64,4 @@ def PantryItemGet(request):
     pantryitem = models.PantryItem.objects.get(pantry__pk = pantry,
             item__ean = ean)
 
-    return http.HttpResponse(serializers.serialize('json', pantryitem))
+    return http.HttpResponse(serializers.serialize('json', pantryitem), content_type='application/json')

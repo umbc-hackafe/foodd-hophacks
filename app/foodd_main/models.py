@@ -58,33 +58,23 @@ NeedsData."""
 
         try:
             item = cls.objects.get(pk=ean)
+            return item
         except exceptions.ObjectDoesNotExist:
             # If it could not be found, look it up.
             resp = urllib.request.urlopen(
                     'http://api.upcdatabase.org/json/{}/{}'.format(
                         settings.EAN_APIKEY, ean))
-            r = json.loads(resp.read().decode('utf8'))
+            response = json.loads(resp.read().decode('utf8'))
 
-            if r['valid'] == "true":
+            if response['valid'] == "true":
                 item = cls(
                         ean         = ean,
-                        name        = r['itemname'],
-                        description = r['description'],
+                        name        = response['itemname'],
+                        description = response['description'],
                         size        = 0)
-
-        # If the item was created, one way or another, save it.
-        # Otherwise, raise NeedsData, but create a blank item anyway.
-        if item != None:
-            item.save()
-
-            # If the item has a filled out ingredient field, then all is
-            # good. Otherwise, raise NeedsIngredient.
-            if item.ingredient == None:
-                raise cls.NeedsIngredient("missing ingredient field")
-
-        else:
-            cls(ean = ean).save()
-            raise cls.NeedsData("missing item data")
+                item.save()
+                return item
+        return None
 
     @staticmethod
     def to_ean(barcode):
