@@ -12,6 +12,9 @@ handlers:
   script: foodd_project.wsgi.application
 
 libraries:
+- name: MySQLdb
+  version: latest
+
 - name: django
   version: 1.5
 
