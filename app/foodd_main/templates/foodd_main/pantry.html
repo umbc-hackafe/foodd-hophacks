@@ -11,9 +11,9 @@
         <div class="list-group-item">
             <h4 class="list-group-item-heading" type="button" data-toggle="collapse"
                 data-target="#ean{{ item.item.ean }}">Name: {{ item.item.name }}</h4>
-            <div id="ean{{ item.item.ean }}" class="collapse in">
+            <div id="ean-{{ item.item.ean }}" class="collapse in">
                 <p>Ingredient type: {{ item.item.ingredient.name }}</p>
-                <p>Number remaining: {{ item.remaining }}</p>
+                <p class="remaining">Number remaining: {{ item.remaining }}</p>
                 <p>Size: {{ item.item.size }} {{ item.item.ingredient.unit }}</p>
                 <p>EAN: {{ item.item.ean }}</p>
                 <p>Description: {{ item.item.description }}</p>
@@ -58,7 +58,7 @@ function list_added_pantry_item(item) {
     outer.append($("<h4>", {"class": "list-group-item-heading", "type": "button",
                             "data-toggle": "collapse", "data-target": "#ean" + item.ean})
         .text("Name: " + item.name));
-    var inner = $("<div>", {"id": "ean" + item.ean, "class": "collapse in"});
+    var inner = $("<div>", {"id": "ean-" + item.ean, "class": "collapse in"});
     outer.append(inner);
     inner.append($("<p>").text("Ingredient type: " + item.item.ingredient.type));
     inner.append($("<p>").addClass("remaining").text("Number remaining: " + item.remaining));
