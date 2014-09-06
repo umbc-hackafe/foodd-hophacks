@@ -39,17 +39,32 @@
                     </ul>
                 </li>
                 {% else %}
-                <li class="active"><a href="/login?next={{ request.get_full_path }}" type="button" class="btn btn-primary">Log In</a>
+                <li class="active"><a href="{% url "login" %}?next={{ request.get_full_path }}" type="button" class="btn btn-primary">Log In</a>
                 {% endif %}
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
-            <form class="navbar-form navbar-right" role="form">
-                <div class="form-group">
-                    <input type="text" placeholder="Search for Recipies" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-success">Search</button>
-          </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown active">
+                    <a href="#" class="dropdown-toggle"
+                        data-toggle="dropdown">Auth <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                          {% if user.is_authenticated %}
+                          <a href="{% url "logout" %}?next={{ request.get_full_path }}">Log Out</a>
+                          {% else %}
+                          <a href="{% url "login" %}?next={{ request.get_full_path }}">Log In</a>
+                          {% endif %}                      
+                        </li>
+                    </ul>
+                </li>
+                <li><form class="navbar-form" role="form">
+                    <div class="form-group">
+                        <input type="text" placeholder="Search for Recipies" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success">Search</button>
+                </li>
+            </ul>
         </div><!--/.nav-collapse -->
     </div>
 </div>
