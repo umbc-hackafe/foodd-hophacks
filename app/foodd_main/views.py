@@ -35,7 +35,11 @@ def ean_info(request, ean):
 
 def ean_suggest(request, ean):
     # XXX: Look up in the local database.
-    item = models.Item.objects.get(pk=ean)
+    try:
+        item = models.Item.objects.get(pk=ean)
+    except models.DoesNotExist:
+        item = None
+        pass
 
     if item == None:
         # Look up code in EAN database.
