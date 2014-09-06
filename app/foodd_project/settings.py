@@ -10,29 +10,12 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine') or True:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-            'HOST': '/cloudsql/marine-waters-695:foodddb',
-            # The following settings are not used with sqlite3:
-            'NAME': 'foodd',
-            'USER': 'root',
-            'PASSWORD': 'changeme'
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'foodddb.db',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-            'HOST': '173.194.106.46',                      # Or path to database file if using sqlite3.
-            # The following settings are not used with sqlite3:
-            'NAME': 'foodd-dev',
-            'USER': 'foodd-dev',
-            'PASSWORD': 'dev-,-%x_tky&tb*772A'
-        }
-    }
-
+}
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -42,7 +25,7 @@ ALLOWED_HOSTS = []
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'America/New_York'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
