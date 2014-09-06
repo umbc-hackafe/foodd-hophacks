@@ -1,5 +1,6 @@
 from django import http
 from django.core import exceptions
+from django.core import serializers
 import foodd_main.models as models
 import json
 
@@ -51,3 +52,18 @@ def ItemComplete(request):
                 matchset]
 
     return http.HttpResponse(json.dumps(suggestions))
+
+def PantryItemGet(request):
+    # Get the Pantry ID from the request.
+    pantry = request.GET.get('pantry')
+
+    # Get the EAN from the request.
+    try:
+        ean = models.Item.to_ean(request.GET.get('ean'))
+    except models.Item.InvalidEAN:
+        return http.HttpResponseBadRequest()
+
+    pantryitem = models.PantryItem.objects.get(pantry__pk = pantry,
+            item__ean = ean)
+
+    return http.HttpResponse(serializers.serialize('json', pantryitem))
