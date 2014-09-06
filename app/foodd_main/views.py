@@ -42,12 +42,12 @@ class IngredientView(generic.DetailView):
         return shortcuts.get_object_or_404(
             models.Ingredient, name__iexact=self.kwargs["name"])
 
-def ean_info(request, ean):
+def EANInfo(request, ean):
     return http.HttpResponse(status=501)
     return http.HttpResponse(serializers.serialize('json', item),
             content_type='application/json')
 
-def ean_suggest(request, ean):
+def EANSuggest(request, ean):
     try:
         item = models.Item.objects.get(pk=ean)
     except exceptions.ObjectDoesNotExist:
