@@ -38,7 +38,7 @@
 </div>
 <form role="form" id="eanform" method="post" action="{% url "PantryItemAdd" %}" data-autocomplete-url="{% url "ItemAutocomplete" %}">
     {% csrf_token %}
-    <input type="hidden" value="{{ pantry.pk }}" />
+    <input type="hidden" name="pk" value="{{ pantry.pk }}" />
     <div class="form-group">
         <label for="ean">Barcode or Item Name</label>
         <input type="text" class="form-control" id="ean" name="ean" placeholder="Enter Item Name or Barcode Number">

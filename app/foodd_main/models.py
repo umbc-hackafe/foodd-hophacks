@@ -60,7 +60,7 @@ NeedsData."""
         try:
             item = cls.objects.get(pk=ean)
             return item
-        except exceptions.ObjectDoesNotExist:
+        except models.ObjectDoesNotExist:
             # If it could not be found, look it up.
             resp = urllib.request.urlopen(
                     'http://api.upcdatabase.org/json/{}/{}'.format(
