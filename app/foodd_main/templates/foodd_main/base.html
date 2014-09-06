@@ -46,16 +46,29 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown active">
-                    <a href="#" class="dropdown-toggle"
-                        data-toggle="dropdown">Auth <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
+                    <a href="#" class="dropdown-toggle btn"
+                        data-toggle="dropdown">
                           {% if user.is_authenticated %}
-                          <a href="{% url "logout" %}?next={{ request.get_full_path }}">Log Out</a>
+                            {% firstof user.first_name user.username %}
                           {% else %}
-                          <a href="{% url "login" %}?next={{ request.get_full_path }}">Log In</a>
-                          {% endif %}                      
+                            Authentication
+                          {% endif %}
+                          <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        {% if user.is_authenticated %}
+                        <li>
+                          <a href="{% url "logout" %}?next={{ request.get_full_path }}">Log Out</a>
                         </li>
+                        {% else %}
+                        <li>
+                          <a href="{% url "login" %}?next={{ request.get_full_path }}">Log In</a>
+                        </li>
+                        {% comment %}
+                        <li>
+                          <a href="{% url "register" %}">Register</a>
+                        </li>
+                        {% endcomment %}
+                        {% endif %}
                     </ul>
                 </li>
                 <li><form class="navbar-form" role="form">
