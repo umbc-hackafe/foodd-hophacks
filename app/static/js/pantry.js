@@ -28,11 +28,15 @@ $.ready(function() {
 	      console.log(data);
 	  }).error(function(err) {
 	      alert(err);
-	  });;
-	addToPantry(ean, count);
+	  });
+    });
+
+    var eanInput = $("input[name='ean']");
+    eanInput.autocomplete({
+	"source": eanInput.data("autocomplete-url"),
+	"minLength": 3,
+	"select": function(evt, ui) {
+	    $("#eapform").submit();
+	}
     });
 });
-
-
-function addToPantry(ean, count) {
-}
