@@ -1,6 +1,7 @@
 from django import http
 from django.core import exceptions
 import foodd_main.models as models
+import json
 
 def EANAdd(request):
     # Get and normalize the EAN from the post request.
@@ -32,3 +33,16 @@ def EANAdd(request):
     # XXX: We should attach a Location header here, pointing to the new
     # Item.
     return http.HttpResponse(json.dumps(jresponse), status=201)
+
+def ItemComplete(request):
+    # Get the query string from the request.
+    query = request.GET.get('q')
+    suggestions = []
+
+    # If the query was given, populate the suggestions.
+    if query:
+        matchset = models.Item.objects.filter(name__icontains = query)
+        suggestions = [{'ean': item.ean, 'name': item.name} for item in
+                matchset]
+
+    return http.HttpResponse(json.dumps(suggestions))
