@@ -39,6 +39,51 @@ class Item(models.Model):
     description = models.CharField(max_length=128, blank=True)
     name = models.CharField(max_length=32)
 
+    class NeedsIngredient(Exception): pass
+    class NeedsData(Exception): pass
+
+    @classmethod
+    def ensure_present(cls, ean):
+        """Given an EAN (or non-sanitized form), ensure that it exists
+in the database. This is accomplished by either finding it in the
+database already, looking it up on the internet, or creating it blank.
+If it is found, but lacks a parent ingredient, it raises
+NeedsIngredient. If no data on the EAN could be found, it raises
+NeedsData."""
+
+        # Begin by sanitizing the EAN.
+        ean = Item.to_ean(ean)
+
+        try:
+            item = cls.objects.get(pk=ean)
+        except exceptions.ObjectDoesNotExist:
+            # If it could not be found, look it up.
+            resp = urllib.request.urlopen(
+                    'http://api.upcdatabase.org/json/{}/{}'.format(
+                        settings.EAN_APIKEY, ean))
+            r = json.loads(resp.read().decode('utf8'))
+
+            if r['valid'] == "true":
+                item = cls(
+                        ean         = ean,
+                        name        = r['itemname'],
+                        description = r['description'],
+                        size        = 0)
+
+        # If the item was created, one way or another, save it.
+        # Otherwise, raise NeedsData, but create a blank item anyway.
+        if item != None:
+            item.save()
+
+            # If the item has a filled out ingredient field, then all is
+            # good. Otherwise, raise NeedsIngredient.
+            if item.ingredient == None:
+                raise cls.NeedsIngredient("missing ingredient field")
+
+        else:
+            cls(ean = ean).save()
+            raise cls.NeedsData("missing item data")
+
     @staticmethod
     def to_ean(barcode):
         # XXX: Improve
