@@ -12,6 +12,17 @@ EAN_APIKEY = os.getenv("FOODD_EANDATABASE_KEY")
 class HomeView(generic.TemplateView):
     template_name = "foodd_main/home.html"
 
+class IngredientView(generic.DetailView):
+    context_object_name = "ingredient"
+    template_name = "foodd_main/ingredient.html"
+
+    def get_queryset(self):
+        return shortcuts.get_object_or_404(models.Ingredient, name__iexact=self.args[0])
+
+    def get_context_data(self, **kwargs):
+        context = super(IngredientView, self).get_context_data(**kwargs)
+        return context
+
 def ean_info(request, ean):
     return http.HttpResponse(status=501)
     return http.HttpResponse(serializers.serialize('json', item),

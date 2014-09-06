@@ -1,0 +1,15 @@
+{% extends "foodd_main/base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ ingredient.name }}</h1>
+</div>
+<p>{{ ingredient.unit }}</p>
+<div class="list-group">
+    <p class="list-group-item active">Provides</p>
+    {% for other in ingredient.provides %}
+        <a href={% url "ingredient" name=other.name %} class="list-group-item">{{ other.name }}</a>
+    {% endfor %}
+</div>
+<h2>Properties</h2>
+{% endblock content %}
