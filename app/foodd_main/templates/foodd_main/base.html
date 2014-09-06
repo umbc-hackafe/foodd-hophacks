@@ -39,7 +39,7 @@
                     </ul>
                 </li>
                 {% else %}
-                <li class="active"><a href="#" type="button" class="btn btn-primary">Log In</a>
+                <li class="active"><a href="/login?next={{ request.get_full_path }}" type="button" class="btn btn-primary">Log In</a>
                 {% endif %}
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
