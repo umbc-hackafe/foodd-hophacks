@@ -30,17 +30,19 @@ def ean_info(request, ean):
 
 def ean_suggest(request, ean):
     # XXX: Look up in the local database.
+    item = models.Item.objects.get(pk=ean)
 
-    # Look up code in EAN database.
-    r = json.loads(urllib.urlopen('http://api.upcdatabase.org/json/{}/{}' \
-            .format( EAN_APIKEY, ean)).read())
+    if item == None:
+        # Look up code in EAN database.
+        r = json.loads(urllib.urlopen('http://api.upcdatabase.org/json/{}/{}' \
+                .format( EAN_APIKEY, ean)).read())
 
-    info = {
-        'ean':         r['number'],
-        'description': r['description'],
-        'ingredient':  r['itemname'],
-        'size':        0
-    }
+        info = {
+            'ean':         r['number'],
+            'description': r['description'],
+            'ingredient':  r['itemname'],
+            'size':        0
+        }
 
     return http.HttpResponse(json.dumps(info),
             content_type='application/json')
