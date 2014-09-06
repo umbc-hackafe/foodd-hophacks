@@ -4,12 +4,18 @@ from django import shortcuts
 from django.core import serializers
 from django.core import exceptions
 from django.db.models import Q
+from django.contrib.auth import decorators
 import foodd_main.models as models
 import logging
 import json
 import os
 import urllib.request
 import foodd_project.settings as settings
+
+class LoginRequiredMixin(generic.base.View):
+    @decorators.login_required
+    def dispatch(self, *args, **kwargs):
+        return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
 
 EAN_APIKEY = os.getenv("FOODD_EANDATABASE_KEY")
 
@@ -29,7 +35,7 @@ class SearchView(generic.ListView):
         context['query'] = self.kwargs['query']
         return context
 
-class PantryView(generic.ListView):
+class PantryView(generic.ListView, LoginRequiredMixin):
     template_name = "foodd_main/pantry.html"
     context_object_name = "pantry_items"
 
@@ -43,7 +49,7 @@ class PantryView(generic.ListView):
         context["pantry"] = self.pantry
         return context
 
-class ItemView(generic.DetailView):
+class ItemView(generic.DetailView, LoginRequiredMixin):
     template_name = "foodd_main/item.html"
     context_object_name = "item"
 
