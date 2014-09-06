@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>{{ pantry.owner.first_name }}'s Pantry</h1>
+    <h1>{{ pantry.owner.first_name }}&apos;s Pantry</h1>
 </div>
 <div id="pantry-items" class="list-group">
     <p class="list-group-item active">Items In This Pantry</p>
@@ -58,7 +58,7 @@ function list_added_pantry_item(item) {
     var inner = $("<div>", {"id": "ean" + item.item.ean, "class": "collapse in"});
     outer.append(inner);
     inner.append($("<p>").text("Ingredient type: " + item.item.ingredient.type));
-    inner.append($("<p>").text("Number remaining: " + item.remaining));
+    inner.append($("<p>").addClass("remaining").text("Number remaining: " + item.remaining));
     inner.append($("<p>").text("Size: " + item.item.size + " " + item.item.ingredient.unit));
     inner.append($("<p>").text("EAN: " + item.item.ean));
     inner.append($("<p>").text("Description: " + item.item.description));
@@ -78,6 +78,7 @@ function list_added_pantry_item(item) {
         ul.append($("<li>").text("Name: " + prop.name));
     });
     $("#pantry-items").append(outer);
+    return outer;
 }
 </script>
 {% endblock %}
