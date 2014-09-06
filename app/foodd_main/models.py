@@ -83,9 +83,9 @@ NeedsData."""
             raise Item.InvalidEAN
 
         if len(barcode) == 12:
-            ean = "0{}".format(barcode)
+            barcode = "0{}".format(barcode)
 
-        return ean
+        return barcode
 
     def clean(self):
         super(Item, self).clean()
@@ -101,7 +101,7 @@ class Pantry(models.Model):
     items = models.ManyToManyField(Item, through='PantryItem')
 
     def __str__(self):
-        return "Pantry: owner: {}".format(owner.name)
+        return "Pantry: owner: {}".format(self.owner.user.username)
 
 class PantryMembership(models.Model):
     PANTRY_PERMISSIONS_CHOICES = (

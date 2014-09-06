@@ -25,7 +25,7 @@ def PantryItemAdd(request):
         return http.HttpResponseBadRequest()
 
     count = request.POST.get('count')
-    if not count or count < 0:
+    if not count or int(count) < 0:
         return http.HttpResponseBadRequest()
 
     try:

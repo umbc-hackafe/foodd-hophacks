@@ -1,4 +1,5 @@
 {% extends "foodd_main/base.html" %}
+{% load staticfiles %}
 
 {% block content %}
 <div class="page-header">
@@ -18,7 +19,7 @@
                 <p>Description: {{ item.item.description }}</p>
                 <p>Properties:</p>
                 <ul>
-                    {% for property in item.item.ingredient.properties %}
+                    {% for property in item.item.ingredient.properties.all %}
                     <li>
                         <p>Name: {{ property.name }}</p>
                         <p>Description: {{ property.description }}</p>
@@ -27,7 +28,7 @@
                 </ul>
                 <p>Provides:</p>
                 <ul>
-                    {% for ing in item.item.ingredient.provides %}
+                    {% for ing in item.item.ingredient.provides.all %}
                     <li>Name: {{ ing.name }}</li>
                     {% endfor %}
                 </ul>
@@ -35,7 +36,8 @@
         <div>
     {% endfor %}
 </div>
-<form role="form" id="eanform" action="{% url "PantryItemAdd" %}" data-autocomplete-url="{% url "ItemAutocomplete" %}">
+<form role="form" id="eanform" method="post" action="{% url "PantryItemAdd" %}" data-autocomplete-url="{% url "ItemAutocomplete" %}">
+    {% csrf_token %}
     <input type="hidden" value="{{ pantry.pk }}" />
     <div class="form-group">
         <label for="ean">Barcode or Item Name</label>
@@ -82,4 +84,5 @@ function list_added_pantry_item(item) {
     return outer;
 }
 </script>
+<script type="text/javascript" src="{% static "js/pantry.js" %}"></script>
 {% endblock %}

@@ -35,7 +35,7 @@ class PantryView(generic.ListView):
 
     def get_queryset(self):
         self.pantry = shortcuts.get_object_or_404(
-            models.Pantry, pk=kwargs["pk"])
+            models.Pantry, pk=self.kwargs["pk"])
         return models.PantryItem.objects.filter(pantry=self.pantry)
 
     def get_context_data(self):
