@@ -41,32 +41,27 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
                 <li class="dropdown active">
-                    <a href="#" class="dropdown-toggle btn {% if user.is_authenticated %}btn-primary{% else %}btn-success{% endif %}"
+                    <a href="#" class="dropdown-toggle btn btn-primary navbar-btn"
                         data-toggle="dropdown">
-                          {% if user.is_authenticated %}
-                            {% firstof user.first_name user.username %}
-                          {% else %}
-                            Authentication
-                          {% endif %}
+                          {% firstof user.first_name user.username %}
                           <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        {% if user.is_authenticated %}
                         <li>
                           <a href="{% url "logout" %}?next={{ request.get_full_path }}">Log Out</a>
                         </li>
-                        {% else %}
-                        <li>
-                          <a href="{% url "login" %}?next={{ request.get_full_path }}">Log In</a>
-                        </li>
-                        {% comment %}
-                        <li>
-                          <a href="{% url "register" %}">Register</a>
-                        </li>
-                        {% endcomment %}
-                        {% endif %}
                     </ul>
                 </li>
+                {% else %}
+                <li>
+                    <a href="{% comment %}{% url "create-account" %}{% endcomment %}" class="btn navbar-btn">Register</a>
+                </li>
+                <li>
+                    <a href="{% url "login" %}?next={{ request.get_full_path }}" class="btn navbar-btn">Log In</a>
+                </li>
+                {% endif %}
+
                 <li><form class="navbar-form" role="form">
                     <div class="form-group">
                         <input type="text" placeholder="Search for Recipies" class="form-control">
