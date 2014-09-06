@@ -146,3 +146,8 @@ LOGGING = {
         },
     }
 }
+
+BOOTSTRAP3 = {
+    'javascript_in_head': True,
+    'jquery_url': '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js',
+}
