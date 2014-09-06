@@ -21,15 +21,14 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                {% if user.is_authenticated %}
-                <li class="dropdown active">
-                    <a href="#" class="dropdown-toggle"
+                <li class="dropdown {% if user.is_authenticated %}enabled{% else %}disabled{% endif %}">
+                    <a href="#" class="dropdown-toggle {% if not user.is_authenticated %}disabled{% endif %}"
                         data-toggle="dropdown">Pantries <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         {% for pantry in user.pantry %}
-                        <li><a href="#">{{ pantry.name }}</a></li>
+                          <li><a href="#">{{ pantry.name }}</a></li>
                         {% empty %}
-                        <li class="disabled"><a href="#">No Pantries</a></li>
+                          <li class="disabled"><a href="#">No Pantries</a></li>
                         {% endfor %}
                         <li class="divider"></li>
                         <li><a href="#">
@@ -38,9 +37,6 @@
                             </a></li>
                     </ul>
                 </li>
-                {% else %}
-                <li class="active"><a href="{% url "login" %}?next={{ request.get_full_path }}" type="button" class="btn btn-primary">Log In</a>
-                {% endif %}
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
