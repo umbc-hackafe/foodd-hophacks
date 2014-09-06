@@ -94,6 +94,7 @@ NeedsData."""
 
 class Pantry(models.Model):
     owner = models.ForeignKey(FooddUser)
+    name = models.CharField(max_length=32)
     members = models.ManyToManyField(FooddUser, through='PantryMembership', related_name='+')
     items = models.ManyToManyField(Item, through='PantryItem')
 
