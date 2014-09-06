@@ -39,6 +39,19 @@ class Item(models.Model):
     description = models.CharField(max_length=128, blank=True)
     name = models.CharField(max_length=32)
 
+    @staticmethod
+    def to_ean(barcode):
+        # XXX: Improve
+        if len(barcode) == 12:
+            ean = "0{}".format(barcode)
+
+        return ean
+
+    def clean(self):
+        super(Item, self).clean()
+
+        self.ean = self.to_ean(self.ean)
+
     def __str__(self):
         return "Item: {}, {}".format(self.name, self.ean)
 
