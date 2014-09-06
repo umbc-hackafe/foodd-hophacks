@@ -21,7 +21,7 @@ class Item(models.Model):
     ean = models.CharField(max_length=13, primary_key=True)
     ingredient = models.ForeignKey(Ingredient)
     size = models.IntegerField()
-    description = models.CharField(max_length=128)
+    description = models.CharField(max_length=128, blank=True)
 
 class Pantry(models.Model):
     owner = models.ForeignKey(contrib_models.User)
