@@ -17,8 +17,13 @@ def EANAdd(request):
     # At this point, check whether the Item exists already. If so, don't
     # do anything.
     try:
-        models.Item.objects.get(pk=ean)
+        item = models.Item.objects.get(pk=ean)
         jresponse['new'] = False
+        if item.description == None or item.size == None:
+            raise models.Items.NeedsIngredient("missing item data")
+        elif item.ingredient == None:
+            raise models.Items.NeedsData("missing item data")
+
         return http.HttpResponse(json.dumps(jresponse))
     except exceptions.ObjectDoesNotExist:
         jresponse['new'] = True
