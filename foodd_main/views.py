@@ -1,4 +1,5 @@
 from django import http
+from django import shortcuts
 
 def home(request):
-    return http.HttpResponse('Hello World!')
+    shortcuts.render(request, "base.html")

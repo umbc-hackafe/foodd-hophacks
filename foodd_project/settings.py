@@ -114,6 +114,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'bootstrap3',
     'foodd_main',
 )
 
