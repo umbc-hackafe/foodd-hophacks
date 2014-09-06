@@ -34,7 +34,7 @@ class ItemView(generic.DetailView):
     context_object_name = "item"
 
     def get_queryset(self):
-        return models.Item.objects.filter(ean=self.kwargs["ean"])
+        return models.Item.objects.filter(ean=self.kwargs["pk"])
 
 class IngredientsView(generic.ListView):
     template_name = "foodd_main/ingredients.html"
