@@ -19,6 +19,8 @@ def calc_check_digit(value):
 
 def to_upca(upce_value):
     """Test value 04182635 -> 041800000265"""
+    if not upce_value:
+        return False
     if len(upce_value)==6:
         middle_digits=upce_value #assume we're getting just middle 6 digits
     elif len(upce_value)==7:
@@ -55,7 +57,7 @@ def to_ean(barcode):
         barcode = upca
         # XXX: Improve
     if type(barcode) != str or len(barcode) > 13:
-        raise Item.InvalidEAN
+        raise ValueError
 
     if len(barcode) == 12:
         barcode = "0{}".format(barcode)

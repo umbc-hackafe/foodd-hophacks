@@ -13,7 +13,7 @@
                 data-target="#ean{{ item.item.ean }}">Name: {{ item.item.name }}</h4>
             <div id="ean{{ item.item.ean }}" class="collapse in">
                 <p>Ingredient type: {{ item.item.ingredient.name }}</p>
-                <p>Number remaining: {{ itme.remaining }}</p>
+                <p>Number remaining: {{ item.remaining }}</p>
                 <p>Size: {{ item.item.size }} {{ item.item.ingredient.unit }}</p>
                 <p>EAN: {{ item.item.ean }}</p>
                 <p>Description: {{ item.item.description }}</p>
@@ -33,7 +33,7 @@
                     {% endfor %}
                 </ul>
             </div>
-        <div>
+        </div>
     {% endfor %}
 </div>
 <form role="form" id="eanform" method="post" action="{% url "PantryItemAdd" %}" data-autocomplete-url="{% url "ItemAutocomplete" %}">

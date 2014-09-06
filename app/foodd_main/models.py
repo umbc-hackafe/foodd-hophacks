@@ -78,6 +78,12 @@ NeedsData."""
                         size        = 0)
                 item.save()
                 return item
+            else:
+                item = cls(ean=ean,
+                           name="Unknown",
+                           description="",
+                           size=0)
+                return item
         return None
 
     @staticmethod
