@@ -14,6 +14,9 @@ class FooddUser(models.Model):
     user = models.OneToOneField(contrib_models.User)
     units = models.CharField(max_length=1, choices=UNITS_CHOICES, default='C')
 
+    def __str__(self):
+        return "FooddUser: {}".format(self.user.username)
+
 class Property(models.Model):
     name = models.CharField(max_length=32, unique=True)
     description = models.CharField(max_length=128)
