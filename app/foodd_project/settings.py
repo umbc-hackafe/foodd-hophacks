@@ -29,7 +29,7 @@ else:
             'HOST': 'dylwhich.com',                      # Or path to database file if using sqlite3.
             'PORT': 443,
             # The following settings are not used with sqlite3:
-            'NAME': 'foodd-dev',
+            'NAME': 'foodd_dev',
             'USER': 'foodd',
             'PASSWORD': ',-%x_tky&tb*772A'
         }
