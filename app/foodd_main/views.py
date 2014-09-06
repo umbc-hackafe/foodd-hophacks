@@ -48,7 +48,6 @@ def ean_info(request, ean):
             content_type='application/json')
 
 def ean_suggest(request, ean):
-    # XXX: Look up in the local database.
     try:
         item = models.Item.objects.get(pk=ean)
     except exceptions.ObjectDoesNotExist:
@@ -56,7 +55,15 @@ def ean_suggest(request, ean):
                 .format(ean))
         item = None
 
-    if item == None:
+    if item != None:
+        info = {
+            'ean':         item.ean,
+            'description': item.description,
+            'ingredient':  item.ingredient.name,
+            'size':        item.size
+        }
+
+    else:
         # Look up code in EAN database.
         # XXX: Do this more efficiently.
         resp = urllib.request.urlopen(
@@ -64,12 +71,15 @@ def ean_suggest(request, ean):
                     settings.EAN_APIKEY, ean))
         r = json.loads(resp.read().decode('utf8'))
 
-        info = {
-            'ean':         r['number'],
-            'description': r['description'],
-            'ingredient':  r['itemname'],
-            'size':        0
-        }
+        if r["valid"] == "true":
+            info = {
+                'ean':         r['number'],
+                'description': r['description'],
+                'ingredient':  r['itemname'],
+                'size':        0
+            }
+        else:
+            info = {}
 
     return http.HttpResponse(json.dumps(info),
             content_type='application/json')
