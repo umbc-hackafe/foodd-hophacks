@@ -64,9 +64,43 @@ def PantryItemAdd(request):
 
     pantry_item.save()
 
-    inner_item = serializers.serialize('json', [pantry_item.item])
-    logging.info(inner_item)
-    return http.HttpResponse(serializers.serialize('json', [pantry_item]), content_type='application/json')
+    dic = {
+        "remaining": 0,
+        "ean": None,
+        "name": None,
+        "ean": None,
+        "item": {
+            "description": None,
+            "name": None,
+            "ingredient": {
+                "type": "",
+                "unit": "D",
+                "properties": []
+            }
+        }
+    }
+
+    try:
+        dic["remaining"] = pantry_item.remaining
+        dic["ean"] = pantry_item.item_id
+
+        inner_item = pantry_item.item
+
+        dic["name"] = inner_item.name
+        dic["item"]["description"] = inner_item.description
+        dic["item"]["name"] = inner_item.name
+
+        dic["item"]["ingredient"]["unit"] = inner_item.ingredien.unit
+        dic["item"]["ingredient"]["type"] = inner_item.ingredient.type
+
+        dic["item"]["ingredient"]["properties"] = list(inner_item.ingredient.properties)
+    except models.Item.DoesNotExist:
+        pass
+
+    # grr
+    result = json.dumps(dic)
+    logging.error(result)
+    return http.HttpResponse(result, content_type='application/json')
 
 @decorators.login_required
 def PantryItemGet(request):
