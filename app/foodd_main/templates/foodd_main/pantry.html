@@ -4,7 +4,7 @@
 <div class="page-header">
     <h1>{{ pantry.owner.first_name }}'s Pantry</h1>
 </div>
-<div class="list-group">
+<div id="pantry-items" class="list-group">
     <p class="list-group-item active">Items In This Pantry</p>
     {% for item in pantry_items %}
         <div class="list-group-item">
@@ -36,3 +36,37 @@
     {% endfor %}
 </div>
 {% endblock content %}
+
+{% block bootstrap3_extra_script %}
+<script>
+function list_added_pantry_item(item) {
+    var outer = $("<div>", {"class": "list-group-item"});
+    outer.append($("<h4>", {"class": "list-group-item-heading", "type": "button",
+                            "data-toggle": "collapse", "data-target": "#ean" + item.item.ean})
+        .text("Name: " + item.item.name));
+    var inner = $("<div>", {"id": "ean" + item.item.ean, "class": "collapse in"});
+    outer.append(inner);
+    inner.append($("<p>").text("Ingredient type: " + item.item.ingredient.type));
+    inner.append($("<p>").text("Number remaining: " + item.remaining));
+    inner.append($("<p>").text("Size: " + item.item.size + " " + item.item.ingredient.unit));
+    inner.append($("<p>").text("EAN: " + item.item.ean));
+    inner.append($("<p>").text("Description: " + item.item.description));
+    inner.append($("<p>").text("Properties:"));
+    var ul = $("<ul>");
+    inner.append(ul);
+    $.each(item.item.ingredient.properties, function(prop) {
+        var li = $("<li>");
+        ul.append(li);
+        li.append($("<p>").text("Name: " + prop.name));
+        li.append($("<p>").text("Description: " + prop.description));
+    });
+    inner.append($("<p>").text("Provides:"));
+    var ul = $("<ul>");
+    inner.append(ul);
+    $.each(item.item.ingredient.properties, function(prop) {
+        ul.append($("<li>").text("Name: " + prop.name));
+    });
+    $("#pantry-items").append(outer);
+}
+</script>
+{% endblock %}
