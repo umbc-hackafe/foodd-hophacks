@@ -14,3 +14,6 @@ handlers:
 libraries:
 - name: django
   version: 1.5
+
+env_variables:
+  FOODD_UPCDATABASE_KEY: 'bcf4e3a95ca665edfc1c22df3ab83a34'
