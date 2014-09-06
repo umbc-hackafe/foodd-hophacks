@@ -4,7 +4,9 @@
 <div class="page-header">
     <h1>{{ ingredient.name }}</h1>
 </div>
-<p>{{ ingredient.unit }}</p>
+<ul class="list-group">
+    <li class="list-group-item">{{ ingredient.unit }}</li>
+</ul>
 <div class="list-group">
     <p class="list-group-item active">Provides</p>
     {% for other in ingredient.provides %}
