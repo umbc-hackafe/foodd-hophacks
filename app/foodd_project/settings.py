@@ -1,3 +1,4 @@
+import os
 # Django settings for foodd_project project.
 
 DEBUG = True
@@ -9,17 +10,31 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'HOST': 'dylwhich.com',                      # Or path to database file if using sqlite3.
-        'PORT': 3306,
-        # The following settings are not used with sqlite3:
-        'NAME': 'foodd',
-        'USER': 'foodd',
-        'PASSWORD': ',-%x_tky&tb*772A'
+if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'HOST': 'dylwhich.com',                      # Or path to database file if using sqlite3.
+            'PORT': 443,
+            # The following settings are not used with sqlite3:
+            'NAME': 'foodd',
+            'USER': 'foodd',
+            'PASSWORD': ',-%x_tky&tb*772A'
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'HOST': 'dylwhich.com',                      # Or path to database file if using sqlite3.
+            'PORT': 443,
+            # The following settings are not used with sqlite3:
+            'NAME': 'foodd-dev',
+            'USER': 'foodd',
+            'PASSWORD': ',-%x_tky&tb*772A'
+        }
+    }
+
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -114,6 +129,14 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+#    'django.contrib.admin',
+#    'django.contrib.comments',
     'bootstrap3',
     'foodd_main',
 )
