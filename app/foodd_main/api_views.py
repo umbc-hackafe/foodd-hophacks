@@ -3,7 +3,10 @@ import foodd_main.models as models
 
 def EANAdd(request):
     # Get and normalize the EAN from the post request.
-    ean = models.Item.to_ean(request.POST.get('ean'))
+    try:
+        ean = models.Item.to_ean(request.POST.get('ean'))
+    except models.Item.InvalidEAN:
+        return http.HttpResponseBadRequest()
 
     # Create a response dictionary so whatever calls this can provide
     # more information if necessary.

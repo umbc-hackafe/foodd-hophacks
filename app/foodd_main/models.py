@@ -42,6 +42,8 @@ class Item(models.Model):
     class NeedsIngredient(Exception): pass
     class NeedsData(Exception): pass
 
+    class InvalidEAN(Exception): pass
+
     @classmethod
     def ensure_present(cls, ean):
         """Given an EAN (or non-sanitized form), ensure that it exists
@@ -87,6 +89,9 @@ NeedsData."""
     @staticmethod
     def to_ean(barcode):
         # XXX: Improve
+        if type(barcode) != str or len(barcode) > 13:
+            raise Item.InvalidEAN
+
         if len(barcode) == 12:
             ean = "0{}".format(barcode)
 
