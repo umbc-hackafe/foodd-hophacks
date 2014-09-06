@@ -14,8 +14,8 @@ class Ingredient(models.Model):
 
     name = models.CharField(max_length=128)
     unit = models.CharField(max_length=1, choices=UNIT_CHOICES)
-    provides = models.ManyToManyField("self")
-    properties = models.ManyToManyField(Property)
+    provides = models.ManyToManyField("self", blank=True)
+    properties = models.ManyToManyField(Property, blank=True)
 
 class Item(models.Model):
     ean = models.CharField(max_length=13, primary_key=True)
@@ -41,7 +41,7 @@ class PantryMembership(models.Model):
 class PantryItem(models.Model):
     pantry = models.ForeignKey(Pantry)
     item = models.ForeignKey(Item)
-    remaining = models.IntegerField()
+    remaining = models.IntegerField(default=1)
 
 class Modifier(models.Model):
     name = models.CharField(max_length=32)
@@ -51,13 +51,13 @@ class Recipe(models.Model):
     description = models.TextField()
     instructions = models.TextField()
     ingredients = models.ManyToManyField(Ingredient, through='RecipeIngredient', related_name='fromrecipe')
-    preptime = models.IntegerField(null=True)
+    preptime = models.IntegerField(blank=True)
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe)
     ingredient = models.ForeignKey(Ingredient)
     amount = models.FloatField()
-    forproperties = models.ManyToManyField(Property)
+    forproperties = models.ManyToManyField(Property, blank=True)
     required = models.BooleanField(default=True)
-    modifiers = models.ManyToManyField(Modifier)
-    grouping = models.IntegerField(null=True)
+    modifiers = models.ManyToManyField(Modifier, blank=True)
+    grouping = models.IntegerField(default=0)
