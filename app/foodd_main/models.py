@@ -1,5 +1,6 @@
 from django.db import models
 import django.contrib.auth.models as contrib_models
+import foodd_main.barcode as barcodelib
 
 class FooddUser(models.Model):
     UNITS_CHOICES = (
@@ -78,14 +79,7 @@ NeedsData."""
 
     @staticmethod
     def to_ean(barcode):
-        # XXX: Improve
-        if type(barcode) != str or len(barcode) > 13:
-            raise Item.InvalidEAN
-
-        if len(barcode) == 12:
-            barcode = "0{}".format(barcode)
-
-        return barcode
+        return barcodelib.to_ean(barcode)
 
     def clean(self):
         super(Item, self).clean()
