@@ -1,6 +1,7 @@
 from django.contrib import admin
-from foodd_main.models import Property, Ingredient, Item, Pantry, PantryMembership, PantryItem, Modifier, Recipe, RecipeIngredient
+from foodd_main.models import FooddUser, Property, Ingredient, Item, Pantry, PantryMembership, PantryItem, Modifier, Recipe, RecipeIngredient
 
+admin.site.register(FooddUser)
 admin.site.register(Property)
 admin.site.register(Ingredient)
 admin.site.register(Item)
