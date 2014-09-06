@@ -10,16 +10,28 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'HOST': '/cloudsql/marine-waters-695:foodddb',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'NAME': 'foodd',
-        'USER': 'foodd',
-        'PASSWORD': ',-%x_tky&tb*772A'
+if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine') or True:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'HOST': '/cloudsql/marine-waters-695:foodddb',
+            # The following settings are not used with sqlite3:
+            'NAME': 'foodd',
+            'USER': 'root',
+            'PASSWORD': 'changeme'
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'HOST': '173.194.106.46',                      # Or path to database file if using sqlite3.
+            # The following settings are not used with sqlite3:
+            'NAME': 'foodd-dev',
+            'USER': 'foodd-dev',
+            'PASSWORD': 'dev-,-%x_tky&tb*772A'
+        }
+    }
 
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
