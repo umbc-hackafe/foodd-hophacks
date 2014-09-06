@@ -10,7 +10,7 @@ import urllib
 EAN_APIKEY = os.getenv("FOODD_EANDATABASE_KEY")
 
 class HomeView(generic.TemplateView):
-    template_name = "foodd_main/base.html"
+    template_name = "foodd_main/home.html"
 
 def ean_info(request, ean):
     return http.HttpResponse(status=501)
