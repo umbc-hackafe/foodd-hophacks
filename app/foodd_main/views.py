@@ -12,12 +12,12 @@ import os
 import urllib.request
 import foodd_project.settings as settings
 
-class LoginRequiredMixin(generic.base.View):
-    @decorators.login_required
-    def dispatch(self, *args, **kwargs):
-        return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
-
 EAN_APIKEY = os.getenv("FOODD_EANDATABASE_KEY")
+
+class LoginRequiredMixin(generic.base.View):
+    @classmethod
+    def as_view(cls, *args, **kwargs):
+        return decorators.login_required(super(LoginRequiredMixin, cls).as_view(*args, **kwargs))
 
 class HomeView(generic.TemplateView):
     template_name = "foodd_main/home.html"

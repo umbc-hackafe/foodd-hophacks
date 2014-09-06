@@ -1,4 +1,5 @@
 from django.conf import urls
+from django.contrib.auth import decorators
 import foodd_main.views as views
 
 urlpatterns = urls.patterns(

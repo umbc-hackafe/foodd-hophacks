@@ -1,6 +1,7 @@
 from django import http
 from django.core import exceptions
 from django.core import serializers
+from django.contrib.auth import decorators
 from foodd_main import models
 import logging
 import json
@@ -18,6 +19,7 @@ def ItemAutocomplete(request):
 
     return http.HttpResponse(json.dumps(suggestions))
 
+@decorators.login_required
 def PantryItemAdd(request):
     # Get and normalize the EAN from the post request.
     try:
@@ -66,7 +68,7 @@ def PantryItemAdd(request):
     logging.info(inner_item)
     return http.HttpResponse(serializers.serialize('json', [pantry_item]), content_type='application/json')
 
-
+@decorators.login_required
 def PantryItemGet(request):
     # Get the Pantry ID from the request.
     pantry = request.GET.get('pantry')
