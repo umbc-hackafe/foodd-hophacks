@@ -159,7 +159,7 @@ LOGGING = {
     }
 }
 
-LOGIN_URL = '/login'
+LOGIN_URL = 'login'
 
 BOOTSTRAP3 = {
     'javascript_in_head': True,
