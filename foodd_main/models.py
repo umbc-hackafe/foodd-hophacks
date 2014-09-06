@@ -18,7 +18,7 @@ class Ingredient(models.Model):
     properties = models.ManyToManyField(Property)
 
 class Item(models.Model):
-    upc = models.CharField(max_length=13, primary_key=True)
+    ean = models.CharField(max_length=13, primary_key=True)
     ingredient = models.ForeignKey(Ingredient)
     size = models.IntegerField()
     description = models.CharField(max_length=128)
