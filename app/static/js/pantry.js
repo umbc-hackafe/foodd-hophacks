@@ -3,16 +3,17 @@ $(document).ready(function() {
     $("#eanform").submit(function(event) {
 	event.preventDefault();
 
+	if ($("#ean").val().length < 6) return;
+
 	var vals = {};
 	$("#eanform :input").each(function(){vals[this.name]=$(this).val();});
 	
 	$.post($(this).attr('action'), vals)
 	    .success(function(data) {
-		console.log(data);
 	      // it returns: {remaining, item: {upc, name, description, ingredient: {name, properties[], unit, provides[]}}}
-	      var theItem = $("#ean" + data.item.ean);
+	      var theItem = $("#ean" + data.ean);
 
-	      if (theItem.length) {
+	      if (theItem && theItem.length) {
 		  theItem.find(".remaining").text("Number remaining: " + (data.item.remaining));
 	      } else {
 		  theItem = list_added_pantry_item(data);
@@ -24,7 +25,7 @@ $(document).ready(function() {
 		  theItem.addClass("danger");
 	      }
 
-	      console.log(data);
+              $("#ean").val('').focus();
 	  }).error(function(err) {
 	      alert(err);
 	  });
@@ -38,4 +39,6 @@ $(document).ready(function() {
 	    $("#eapform").submit();
 	}
     });
+
+    $("#ean").focus();
 });

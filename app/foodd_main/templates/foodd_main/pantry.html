@@ -56,30 +56,35 @@
 function list_added_pantry_item(item) {
     var outer = $("<div>", {"class": "list-group-item"});
     outer.append($("<h4>", {"class": "list-group-item-heading", "type": "button",
-                            "data-toggle": "collapse", "data-target": "#ean" + item.item.ean})
-        .text("Name: " + item.item.name));
-    var inner = $("<div>", {"id": "ean" + item.item.ean, "class": "collapse in"});
+                            "data-toggle": "collapse", "data-target": "#ean" + item.ean})
+        .text("Name: " + item.name));
+    var inner = $("<div>", {"id": "ean" + item.ean, "class": "collapse in"});
     outer.append(inner);
     inner.append($("<p>").text("Ingredient type: " + item.item.ingredient.type));
     inner.append($("<p>").addClass("remaining").text("Number remaining: " + item.remaining));
     inner.append($("<p>").text("Size: " + item.item.size + " " + item.item.ingredient.unit));
-    inner.append($("<p>").text("EAN: " + item.item.ean));
+    inner.append($("<p>").text("EAN: " + item.ean));
     inner.append($("<p>").text("Description: " + item.item.description));
     inner.append($("<p>").text("Properties:"));
     var ul = $("<ul>");
     inner.append(ul);
-    $.each(item.item.ingredient.properties, function(prop) {
-        var li = $("<li>");
-        ul.append(li);
-        li.append($("<p>").text("Name: " + prop.name));
-        li.append($("<p>").text("Description: " + prop.description));
+    if (item.item.ingredient && item.item.ingredient.properties.length) {
+        $.each(item.item.ingredient.properties, function(prop) {
+            var li = $("<li>");
+            ul.append(li);
+            li.append($("<p>").text("Name: " + prop.name));
+            li.append($("<p>").text("Description: " + prop.description));
     });
+    }
     inner.append($("<p>").text("Provides:"));
     var ul = $("<ul>");
     inner.append(ul);
-    $.each(item.item.ingredient.properties, function(prop) {
-        ul.append($("<li>").text("Name: " + prop.name));
-    });
+
+    if (item.item.ingredient && item.item.ingredient.properties.length) {
+        $.each(item.item.ingredient.properties, function(prop) {
+            ul.append($("<li>").text("Name: " + prop.name));
+        });
+    }
     $("#pantry-items").append(outer);
     return outer;
 }
