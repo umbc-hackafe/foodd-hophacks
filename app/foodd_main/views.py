@@ -3,6 +3,7 @@ from django.views import generic
 from django import shortcuts
 from django.core import serializers
 from django.core import exceptions
+from django.db.models import Q
 import foodd_main.models as models
 import logging
 import json
@@ -14,6 +15,19 @@ EAN_APIKEY = os.getenv("FOODD_EANDATABASE_KEY")
 
 class HomeView(generic.TemplateView):
     template_name = "foodd_main/home.html"
+
+class SearchView(generic.ListView):
+    template_name = "foodd_main/search.html"
+    context_object_name = "recipes"
+
+    def get_queryset(self):
+        return models.Recipe.objects.filter(Q(description__contains=self.kwargs['query'])
+                                            | Q(name__contains=self.kwargs['query']))
+
+    def get_context_data(self):
+        context = super(SearchView, self).get_context_data()
+        context['query'] = self.kwargs['query']
+        return context
 
 class PantryView(generic.ListView):
     template_name = "foodd_main/pantry.html"
