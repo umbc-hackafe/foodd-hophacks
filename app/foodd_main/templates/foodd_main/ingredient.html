@@ -11,5 +11,13 @@
         <a href={% url "ingredient" name=other.name %} class="list-group-item">{{ other.name }}</a>
     {% endfor %}
 </div>
-<h2>Properties</h2>
+<ul class="list-group">
+    <li class="list-group-item active">Properties</li>
+    {% for prop in ingrediet.properties %}
+    <li class="list-group-item">
+        <p>{{ prop.name }}</p>
+        <p>{{ prop.description }}</p>
+    </li>
+    {% endfor %}
+</ul>
 {% endblock content %}
