@@ -1,4 +1,3 @@
-from google.appengine.ext import ndb
 from django.db import models
 import django.contrib.auth.models as contrib_models
 
@@ -6,7 +5,6 @@ class Property(models.Model):
     name = models.CharField(max_length=32)
     description = models.CharField(max_length=128)
 
-# Create your models here.
 class Ingredient(models.Model):
     UNIT_CHOICES = (
         ('D', 'Discrete'),
@@ -22,7 +20,7 @@ class Ingredient(models.Model):
 class Item(models.Model):
     upc = models.CharField(max_length=13, primary_key=True)
     ingredient = models.ForeignKey(Ingredient)
-    size = models.IntegerKey()
+    size = models.IntegerField()
     description = models.CharField(max_length=128)
 
 class PantryMembership(models.Model):
@@ -31,7 +29,7 @@ class PantryMembership(models.Model):
         ('M', 'Member'),
         ('O', 'Owner')
     )
-    user = models.ForeignKey(contrib_Models.User)
+    user = models.ForeignKey(contrib_models.User)
     permissions = models.CharField(max_length=1, choices=PANTRY_PERMISSIONS_CHOICES)
 
 class PantryItem(models.Model):
