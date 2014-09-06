@@ -29,6 +29,13 @@ class PantryView(generic.ListView):
         context["pantry"] = self.pantry
         return context
 
+class ItemView(generic.DetailView):
+    template_name = "foodd_main/item.html"
+    context_object_name = "item"
+
+    def get_queryset(self):
+        return models.Item.objects.filter(ean=self.kwargs["ean"])
+
 class IngredientsView(generic.ListView):
     template_name = "foodd_main/ingredients.html"
     context_object_name = "ingredients"
