@@ -2,10 +2,13 @@ from django import http
 from django.views import generic
 from django import shortcuts
 from django.core import serializers
+from django.core import exceptions
 import foodd_main.models as models
+import logging
 import json
 import os
-import urllib
+import urllib.request
+import foodd_project.settings as settings
 
 EAN_APIKEY = os.getenv("FOODD_EANDATABASE_KEY")
 
@@ -48,14 +51,18 @@ def ean_suggest(request, ean):
     # XXX: Look up in the local database.
     try:
         item = models.Item.objects.get(pk=ean)
-    except models.DoesNotExist:
+    except exceptions.ObjectDoesNotExist:
+        logging.info("EAN {} not in database, querying upcdatabase.org"
+                .format(ean))
         item = None
-        pass
 
     if item == None:
         # Look up code in EAN database.
-        r = json.loads(urllib.urlopen('http://api.upcdatabase.org/json/{}/{}' \
-                .format( EAN_APIKEY, ean)).read())
+        # XXX: Do this more efficiently.
+        resp = urllib.request.urlopen(
+                'http://api.upcdatabase.org/json/{}/{}'.format(
+                    settings.EAN_APIKEY, ean))
+        r = json.loads(resp.read().decode('utf8'))
 
         info = {
             'ean':         r['number'],
