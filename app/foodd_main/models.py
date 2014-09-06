@@ -97,4 +97,4 @@ class RecipeIngredient(models.Model):
     grouping = models.IntegerField(default=0)
 
     def __str__(self):
-            return "RecipeIngredient: ingredient: {}, amount: {}".format(self.ingredient.name, self.amount)
+        return "RecipeIngredient: ingredient: {}, amount: {}".format(self.ingredient.name, self.amount)
