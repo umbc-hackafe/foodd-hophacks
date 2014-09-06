@@ -1,4 +1,5 @@
 from django import http
+from django.core import exceptions
 import foodd_main.models as models
 
 def EANAdd(request):
@@ -11,6 +12,15 @@ def EANAdd(request):
     # Create a response dictionary so whatever calls this can provide
     # more information if necessary.
     jresponse = {'ean': ean}
+
+    # At this point, check whether the Item exists already. If so, don't
+    # do anything.
+    try:
+        models.Item.objects.get(pk=ean)
+        jresponse['new'] = False
+        return http.HttpResponse(json.dumps(jresponse))
+    except exceptions.ObjectDoesNotExist:
+        jresponse['new'] = True
 
     try:
         models.Item.ensure_present(ean)
