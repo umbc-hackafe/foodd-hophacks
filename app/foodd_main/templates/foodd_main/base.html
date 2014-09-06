@@ -42,7 +42,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown active">
-                    <a href="#" class="dropdown-toggle btn"
+                    <a href="#" class="dropdown-toggle btn {% if user.is_authenticated %}btn-primary{% else %}btn-success{% endif %}"
                         data-toggle="dropdown">
                           {% if user.is_authenticated %}
                             {% firstof user.first_name user.username %}
