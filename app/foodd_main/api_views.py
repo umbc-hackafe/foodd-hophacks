@@ -2,6 +2,7 @@ from django import http
 from django.core import exceptions
 from django.core import serializers
 from foodd_main import models
+import logging
 import json
 
 def ItemAutocomplete(request):
@@ -22,15 +23,27 @@ def PantryItemAdd(request):
     try:
         ean = models.Item.to_ean(request.POST.get('ean'))
     except models.Item.InvalidEAN:
+        if request.POST.get('ean') is None:
+            logging.error("Key 'ean' not found in request.POST")
+        else:
+            loggign.error("EAN %s was considered invalid.", request.POST.get('ean'))
         return http.HttpResponseBadRequest()
 
     count = request.POST.get('count')
-    if not count or int(count) < 0:
+    if not count or int(count) <= 0:
+        if request.POST.get('count') is None:
+            logging.error("Key 'count' missing in request.POST")
+        else:
+            logging.error("Count value %s <= 0", request.POST.get('count'))
         return http.HttpResponseBadRequest()
 
     try:
         pantry = models.Pantry.objects.get(pk=request.POST.get('pk'))
     except exceptions.ObjectDoesNotExist:
+        if request.POST.get('pk') is None:
+            logging.error("Key 'pk' not found in request.POST")
+        else:
+            logging.error("Pantry with pk=%s not found", request.POST.get('pk'))
         return http.HttpResponseBadRequest()
 
     # At this point, check whether the Item exists already. If so, don't
@@ -38,6 +51,7 @@ def PantryItemAdd(request):
     item = models.Item.ensure_present(ean=ean)
 
     if not item:
+        logging.error("Unable to ensure the presence of an item with EAN %s", ean)
         return http.HttpResponseBadRequest()
 
     pantry_item, created = models.PantryItem.objects.get_or_create(
