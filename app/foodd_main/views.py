@@ -3,6 +3,7 @@ from django.views import generic
 from django import shortcuts
 from django.core import serializers
 from django.core import exceptions
+from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.contrib.auth import decorators, authenticate, login
 import foodd_main.models as models
@@ -92,7 +93,9 @@ def UserCreateView(request):
             user.save()
 
             # Now we can sort out the TangleUser instance.
-            # We'll be setting values for the instance ourselves, so commit=False prevents Django from saving the instance automatically.
+            # We'll be setting values for the instance ourselves, so
+            # commit=False prevents Django from saving the instance
+            # automatically.
 
             profile = profile_form.save(commit=False)
             profile.user = user
@@ -110,7 +113,8 @@ def UserCreateView(request):
         else:
             logging.info("User Errors: %s Profile Errors: %s", user_form.errors, profile_form.errors)
 
-    # Not a HTTP POST, so we render the two ModelForms to allow a user to input their data.
+    # Not a HTTP POST, so we render the two ModelForms to allow a user
+    # to input their data.
     else:
         user_form = forms.UserForm()
         profile_form = forms.FooddUserForm()
@@ -123,7 +127,6 @@ def UserCreateView(request):
 class PantryCreateView(generic.edit.CreateView, LoginRequiredMixin):
     template_name = "foodd_main/pantry_create.html"
     form_class = forms.PantryForm
-    success_url = "/"
 
     def form_valid(self, form):
         fuser = models.FooddUser.objects.get(user=self.request.user)
@@ -133,6 +136,9 @@ class PantryCreateView(generic.edit.CreateView, LoginRequiredMixin):
         m.save()
 
         return super(PantryCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse("pantry", args=(self.object.pk,))
 
 def EANInfo(request, ean):
     return http.HttpResponse(status=501)
