@@ -51,11 +51,11 @@
           <a href="{% url "search" %}?q={{ query|urlencode }}&tab=tab&page={{ i }}">{{ i }}</a>
         </li>
       {% endfor %}
-      {% if page < paginator.num_pages %}
+      <li><a {% if page < paginator.num_pages %}
         href="{% url "search" %}?q={{ query|urlencode }}&tab=tab&page={{ page|add:"1" }}"
       {% else %}
         class="disabled"
-      {% endif %}>&laquo;</a></li>
+      {% endif %}>&raquo;</a></li>
   </ul>
 {% else %}
   <div class="page-header">
