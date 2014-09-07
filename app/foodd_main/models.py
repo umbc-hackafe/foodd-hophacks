@@ -28,7 +28,7 @@ class Ingredient(models.Model):
         return "Ingredient: {}".format(self.name)
 
 class Item(models.Model):
-    ean = models.CharField(max_length=13, primary_key=True)
+    ean = models.CharField(max_length=13, primary_key=True, blank=False, null=False)
     ingredient = models.ForeignKey(Ingredient, null=True)
     size = models.IntegerField()
     description = models.CharField(max_length=128, blank=True)
