@@ -7,6 +7,9 @@ admin.autodiscover()
 
 v1_api = api.Api(api_name='v1')
 v1_api.register(resources.IngredientResource())
+v1_api.register(resources.PropertyResource())
+v1_api.register(resources.ItemResource())
+v1_api.register(resources.PantryItemResource())
 
 urlpatterns = urls.patterns(
     "",
