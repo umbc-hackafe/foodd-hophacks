@@ -4,3 +4,6 @@
 [submodule "pint"]
     path = libs/pint
     url = git@github.com:hgrecco/pint.git
+[submodule "libs/django-tastypie"]
+	path = libs/django-tastypie
+	url = git@github.com:toastdriven/django-tastypie.git
