@@ -128,6 +128,7 @@ INSTALLED_APPS = (
 #    'django.contrib.comments',
     'bootstrap3',
     'foodd_main',
+    'tastypie'
 )
 
 # A sample logging configuration. The only tangible logging
