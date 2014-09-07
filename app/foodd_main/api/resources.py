@@ -10,7 +10,8 @@ class IngredientResource(resources.ModelResource):
             'id': 'exact',
             'properties': resources.ALL,
             'unit': 'exact',
-            'provides': resources.ALL
+            'provides': resources.ALL,
+            'name': resources.ALL_WITH_RELATIONS
         }
 
 class PropertyResource(resources.ModelResource):
@@ -27,3 +28,4 @@ class PantryItemResource(resources.ModelResource):
     class Meta:
         queryset = models.PantryItem.objects.all()
         resource_name = 'pantry-item'
+        allowed_methods = ['get', 'delete']
