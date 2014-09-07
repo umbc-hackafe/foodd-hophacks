@@ -1,5 +1,6 @@
 {% extends "foodd_main/base.html" %}
 {% load staticfiles %}
+{% load bootstrap3 %}
 
 {% block content %}
 <div class="page-header">
@@ -19,16 +20,16 @@
     <button type="submit" class="btn btn-default">Submit</button>
 </form>
 <hr/>
+<p class="list-group-item active">Items In This Pantry</p>
 <div id="pantry-items" class="list-group">
-    <p class="list-group-item active">Items In This Pantry</p>
-    {% for item in pantry_items %}
+     {% for item in pantry_items %}
       {% if item.item.ean %}
         <div class="list-group-item">
             <h4 class="list-group-item-heading" type="button" data-toggle="collapse"
-                data-target="#ean-{{ item.item.ean }}">Name: {{ item.item.name }}</h4>
-            <div id="ean-{{ item.item.ean }}" class="collapse in">
+                data-target="#ean-{{ item.item.ean }}">Name: {{ item.item.name }}<a class="deletebtn pull-right" href="#" data-target="#ean-{{ item.item.ean }}">{% bootstrap_icon "trash" %}</a></h4>
+            <div id="ean-{{ item.item.ean }}" data-pk="{{ item.pk }}" class="collapse in">
                 <p>Description: {{ item.item.description }}</p>
-                <p class="remaining">Number remaining: {{ item.remaining }}</p>
+                <p>Number remaining: <span class="remaining" data-remaining="{{item.remaining}}">{{ item.remaining }}</span></p>
                 <p>Size: {{ item.item.size }} {{ item.item.ingredient.unit }}</p>
             </div>
         </div>

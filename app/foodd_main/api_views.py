@@ -83,6 +83,7 @@ def PantryItemAdd(request):
     try:
         dic["remaining"] = pantry_item.remaining
         dic["ean"] = pantry_item.item_id
+        dic["pk"] = pantry_item.pk
 
         inner_item = pantry_item.item
 

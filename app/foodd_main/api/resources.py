@@ -1,5 +1,6 @@
 import tastypie.resources as resources
 import foodd_main.models as models
+import tastypie.authorization as auth
 
 class IngredientResource(resources.ModelResource):
     class Meta:
@@ -28,4 +29,5 @@ class PantryItemResource(resources.ModelResource):
     class Meta:
         queryset = models.PantryItem.objects.all()
         resource_name = 'pantry-item'
-        allowed_methods = ['get', 'delete']
+        allowed_methods = ['get', 'delete', 'put', 'patch']
+        authorization = auth.DjangoAuthorization()
