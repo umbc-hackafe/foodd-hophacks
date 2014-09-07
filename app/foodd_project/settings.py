@@ -1,7 +1,8 @@
 import os
 # Django settings for foodd_project project.
 
-EAN_APIKEY = 'bcf4e3a95ca665edfc1c22df3ab83a34'
+EAN_USERKEY = 'Li04W9o0o3Zi3Xg0'
+EAN_APPID = '/x5hAQQDgilK'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

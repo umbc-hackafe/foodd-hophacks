@@ -4,6 +4,10 @@ import json
 from django.db import models
 import django.contrib.auth.models as contrib_models
 import foodd_main.barcode as barcodelib
+import base64
+import logging
+import hashlib
+import hmac
 
 class Property(models.Model):
     name = models.CharField(max_length=32, unique=True)
@@ -56,17 +60,28 @@ NeedsData."""
             return item
         except models.ObjectDoesNotExist:
             # If it could not be found, look it up.
-            resp = urllib.request.urlopen(
-                    'http://api.upcdatabase.org/json/{}/{}'.format(
-                        settings.EAN_APIKEY, ean))
+            sig = base64.b64encode(hmac.new(settings.EAN_USERKEY.encode('ascii'), str(ean).encode('ascii'), hashlib.sha1).digest())
+            
+            params = {
+'upcCode': ean,
+                'app_key': settings.EAN_APPID,
+                'signature': sig,
+                'language': 'us'}
+            url = 'http://digit-eyes.com/gtin/v2_0/?' + urllib.parse.urlencode(params)
+            logging.error(sig)
+            logging.error(url)
+            resp = urllib.request.urlopen(url)
             response = json.loads(resp.read().decode('utf8'))
 
-            if response['valid'] == "true":
+            logging.error(response)
+
+            if resp.getcode() == 200:
+                logging.error(response)
                 item = cls(
                         ean         = ean,
-                        name        = response['itemname'],
-                        description = response['description'],
-                        size        = 0)
+                        name        = response['description'],
+                        description = response['nutrition'] or "",
+                        size        = int(float(response['uom'].split(' ',1)[0])))
                 item.save()
                 return item
             else:
