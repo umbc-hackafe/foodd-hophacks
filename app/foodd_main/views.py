@@ -6,6 +6,7 @@ from django.core import exceptions
 from django.db.models import Q
 from django.contrib.auth import decorators
 import foodd_main.models as models
+from foodd_main import forms
 import logging
 import json
 import os
@@ -68,6 +69,59 @@ class IngredientView(generic.DetailView):
     def get_queryset(self):
         return shortcuts.get_object_or_404(
             models.Ingredient, name__iexact=self.kwargs["name"])
+
+def UserCreateView(request):
+    # Boolean telling us whether registration was successful or not.
+    # Initially False; presume it was a failure until proven otherwise!
+    registered = False
+
+    # If HTTP POST, we wish to process form data and create an account.
+    if request.method == 'POST':
+        # Grab raw form data - making use of both FormModels.
+        user_form = forms.UserForm(data=request.POST)
+        profile_form = forms.FooddUserForm(data=request.POST)
+
+        # Two valid forms?
+        if user_form.is_valid() and profile_form.is_valid():
+            # Save the user's form data. That one is easy.
+            user = user_form.save()
+
+            # Now a user account exists, we hash the password with the set_password() method.
+            # Then we can update the account with .save().
+            user.set_password(user.password)
+            user.save()
+
+            # Now we can sort out the TangleUser instance.
+            # We'll be setting values for the instance ourselves, so commit=False prevents Django from saving the instance automatically.
+
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            # Now we save the model instance!
+            profile.save()
+            profile_form.save_m2m()
+
+            # We can say registration was successful.
+            registered = True
+
+        # Invalid form(s) - just print errors to the terminal.
+        else:
+            logging.info("User Errors: %s Profile Errors: %s", user_form.errors, profile_form.errors)
+
+    # Not a HTTP POST, so we render the two ModelForms to allow a user to input their data.
+    else:
+        user_form = forms.UserForm()
+        profile_form = forms.FooddUserForm()
+
+    # Render and return!
+    return shortcuts.render(
+            request, 'foodd_main/user_create.html',
+            {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+
+class PantryCreateView(generic.edit.CreateView, LoginRequiredMixin):
+    template_name = "foodd_main/pantry_create.html"
+    form_class = forms.PantryForm
+    success_url = "/"
 
 def EANInfo(request, ean):
     return http.HttpResponse(status=501)

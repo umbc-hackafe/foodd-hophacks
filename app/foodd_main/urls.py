@@ -1,6 +1,6 @@
 from django.conf import urls
 from django.contrib.auth import decorators
-import foodd_main.views as views
+from foodd_main import views
 
 urlpatterns = urls.patterns(
   "",
@@ -13,5 +13,7 @@ urlpatterns = urls.patterns(
   urls.url(r"^ingredient/(?P<name>\w+)$", views.IngredientView.as_view(), name="ingredient"),
   urls.url(r"^ean/suggest/(?P<ean>[0-9]{6,13})$", views.EANSuggest,
       name="ean suggestion"),
+  urls.url(r"^create-account$", views.UserCreateView, name="create-account"),
+  urls.url(r"^create-pantry$", views.PantryCreateView.as_view(), name="create-pantry"),
   urls.url(r"^ean/info/(?P<ean>[0-9]{6,13})$", views.EANInfo, name="ean info")
 )
