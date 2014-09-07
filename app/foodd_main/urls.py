@@ -6,7 +6,7 @@ urlpatterns = urls.patterns(
   "",
   urls.url(r"^$", views.HomeView.as_view(), name="home"),
   urls.url(r"^api/", urls.include("foodd_main.api_urls")),
-  urls.url(r"^search/(?P<query>.+)$", views.SearchView.as_view(), name="search"),
+  urls.url(r"^search", views.SearchView.as_view(), name="search"),
   urls.url(r"^pantry/(?P<pk>[0-9]+)$", views.PantryView.as_view(), name="pantry"),
   urls.url(r"^item/(?P<pk>[0-9]{13})$", views.ItemView.as_view(), name="item"),
   urls.url(r"^ingredient$", views.IngredientsView.as_view(), name="ingredients"),

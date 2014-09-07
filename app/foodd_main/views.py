@@ -4,6 +4,7 @@ from django import shortcuts
 from django.core import serializers
 from django.core import exceptions
 from django.core.urlresolvers import reverse
+from django.core import paginator
 from django.db.models import Q
 from django.contrib.auth import decorators, authenticate, login
 import foodd_main.models as models
@@ -29,12 +30,29 @@ class SearchView(generic.ListView):
     context_object_name = "recipes"
 
     def get_queryset(self):
-        return models.Recipe.objects.filter(Q(description__contains=self.kwargs['query'])
-                                            | Q(name__contains=self.kwargs['query']))
+        self.query = self.request.GET.get('q')
+        return models.Recipe.objects.filter(
+            Q(description__contains=self.query) | Q(name__contains=self.query))
 
     def get_context_data(self):
         context = super(SearchView, self).get_context_data()
-        context['query'] = self.kwargs['query']
+        context["ingredients"] = models.Item.objects.filter(
+            Q(name__contains=self.query) | Q(description__contains=self.query) |
+            Q(ingredient__name__contains=self.query))
+        context["page"] = self.request.GET.get("page")
+        context["tab"] = self.request.GET.get("tab")
+        context["tab"] = context["tab"] if context["tab"] and context["tab"] in ("ingredients", "recipes") else "recipes"
+        context["paginator"] = paginator.Paginator(context[context["tab"]], 20)
+        try:
+            context["items"] = context["paginator"].page(context["page"])
+            context["page"] = int(context["page"])
+        except paginator.PageNotAnInteger:
+            context["page"] = 1
+            context["items"] = context["paginator"].page(1)
+        except paginator.EmptyPage:
+            context["page"] = context["paginator"].num_pages
+            context["items"] = context["paginator"].page(context["paginator"].num_pages)
+        context["query"] = self.query
         return context
 
 class PantryView(generic.ListView, LoginRequiredMixin):

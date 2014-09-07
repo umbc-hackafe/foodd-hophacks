@@ -3,26 +3,63 @@
 {% block bootstrap3_title %}Search Results{% endblock %}
 
 {% block content %}
-
-{% if recipes %}
+<form action="" method="get">
+  <div class="input-group">
+    <input type="text" class="form-control" name="q" value="{{ query }}">
+    <span class="input-group-btn">
+      <input class="btn btn-default" type="submit" value="Search">
+    </span>
+  </div><!-- /input-group -->
+  <input type="hidden" name="tab" value="{{ tab }}">
+</form>
+<br/>
+<ul class="nav nav-tabs" role="tablist">
+  <li {% if tab == "recipes" %}class="active"{% endif %}>
+    <a href="{% url "search" %}?q={{ query|urlencode }}&tab=recipes">Recipies</a>
+  </li>
+  <li {% if tab == "ingredients" %}class="active"{% endif %}>
+    <a href="{% url "search" %}?q={{ query|urlencode }}&tab=ingredients">Ingredients</a>
+  </li>
+</ul>
+{% if items %}
   <div class="page-header">
     <h1>Search Results: {{ query }}</h1>
   </div>
-
   <div class="page-header">
-    <h2>Found {{ recipes|length }} Recipe{{ recipes|length|pluralize }}</h2>
-  </div class="page-header">
+    <h2>Found {{ items|length }} {{ tab|slice:":-1"|capfirst }}{{ items|length|pluralize }}</h2>
+  </div>
   <ul class="list-group">
-    {% for recipe in recipes %}
+    {% for item in items %}
     <li class="list-group-item">
-      {{ recipe.name }}<br/>
-      {{ recipe.description|truncatewords:20 }}
+      {{ item.name }}<br/>
+      {% if tab == "ingredients" %}
+      {{ item.ingredient.name }}<br/>
+      {% endif %}
+      {{ item.description|truncatewords:20 }}
     </li>
     {% endfor %}
   </ul>
+  <ul class="pagination">
+    <li><a
+      {% if page > 1 %}
+        href="{% url "search" %}?q={{ query|urlencode }}&tab=tab&page={{ page|add:"-1" }}"
+      {% else %}
+        class="disabled"
+      {% endif %}>&laquo;</a></li>
+      {% for i in paginator.page_range %}
+        <li {% if i == page %}class="active"{% endif %}>
+          <a href="{% url "search" %}?q={{ query|urlencode }}&tab=tab&page={{ i }}">{{ i }}</a>
+        </li>
+      {% endfor %}
+      {% if page < paginator.num_pages %}
+        href="{% url "search" %}?q={{ query|urlencode }}&tab=tab&page={{ page|add:"1" }}"
+      {% else %}
+        class="disabled"
+      {% endif %}>&laquo;</a></li>
+  </ul>
 {% else %}
   <div class="page-header">
-    <h1>No results for &quot;<em>{{ query }}</em>&quot;</h1>
+    <h1>No {{ tab|capfirst }} for &ldquo;<em>{{ query }}</em>&rdquo;</h1>
   </div>
 {% endif %}
 
