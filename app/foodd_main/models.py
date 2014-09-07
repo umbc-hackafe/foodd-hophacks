@@ -5,18 +5,6 @@ from django.db import models
 import django.contrib.auth.models as contrib_models
 import foodd_main.barcode as barcodelib
 
-class FooddUser(models.Model):
-    UNITS_CHOICES = (
-        ('M', 'Metric'),
-        ('I', 'Standard American Imperial'),
-        ('C', 'Cooking Units')
-    )
-    user = models.OneToOneField(contrib_models.User)
-    units = models.CharField(max_length=1, choices=UNITS_CHOICES, default='C')
-
-    def __str__(self):
-        return "FooddUser: {}".format(self.user.username)
-
 class Property(models.Model):
     name = models.CharField(max_length=32, unique=True)
     description = models.CharField(max_length=128)
@@ -103,11 +91,10 @@ NeedsData."""
 
 class Pantry(models.Model):
     name = models.CharField(max_length=32)
-    members = models.ManyToManyField(FooddUser, through='PantryMembership', related_name='+')
-    items = models.ManyToManyField(Item, through='PantryItem')
+    items = models.ManyToManyField(Item, blank=True, through='PantryItem')
 
     def __str__(self):
-        return "Pantry: owner: {}".format(self.owner.user.username)
+        return "Pantry: {}".format(self.name)
 
 class PantryMembership(models.Model):
     PANTRY_PERMISSIONS_CHOICES = (
@@ -116,11 +103,24 @@ class PantryMembership(models.Model):
         ('O', 'Owner')
     )
     pantry = models.ForeignKey(Pantry)
-    user = models.ForeignKey(FooddUser)
+    user = models.ForeignKey('FooddUser')
     permissions = models.CharField(max_length=1, choices=PANTRY_PERMISSIONS_CHOICES)
 
     def __str__(self):
         return "PantryMembership: Pantry: {}, Member: {}".format(self.pantry, self.user)
+
+class FooddUser(models.Model):
+    UNITS_CHOICES = (
+        ('M', 'Metric'),
+        ('I', 'Standard American Imperial'),
+        ('C', 'Cooking Units')
+    )
+    user = models.OneToOneField(contrib_models.User)
+    units = models.CharField(max_length=1, choices=UNITS_CHOICES, default='C')
+    pantries = models.ManyToManyField(Pantry, through=PantryMembership)
+
+    def __str__(self):
+        return str(self.user)
 
 class PantryItem(models.Model):
     pantry = models.ForeignKey(Pantry)
