@@ -92,8 +92,8 @@ def PantryItemAdd(request):
 
         if inner_item.ingredient:
             dic["item"]["ingredient"]["unit"] = inner_item.ingredient.unit
-            dic["item"]["ingredient"]["type"] = inner_item.ingredient.type
 
+            dic["item"]["ingredient"]["provides"] = list(inner_item.ingredient.provides)
             dic["item"]["ingredient"]["properties"] = list(inner_item.ingredient.properties)
     except models.Item.DoesNotExist:
         pass
