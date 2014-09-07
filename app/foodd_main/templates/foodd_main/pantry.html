@@ -10,7 +10,7 @@
     {% for item in pantry_items %}
         <div class="list-group-item">
             <h4 class="list-group-item-heading" type="button" data-toggle="collapse"
-                data-target="#ean{{ item.item.ean }}">Name: {{ item.item.name }}</h4>
+                data-target="#ean-{{ item.item.ean }}">Name: {{ item.item.name }}</h4>
             <div id="ean-{{ item.item.ean }}" class="collapse in">
                 <p>Ingredient type: {{ item.item.ingredient.name }}</p>
                 <p class="remaining">Number remaining: {{ item.remaining }}</p>
@@ -56,14 +56,14 @@
 function list_added_pantry_item(item) {
     var outer = $("<div>", {"class": "list-group-item"});
     outer.append($("<h4>", {"class": "list-group-item-heading", "type": "button",
-                            "data-toggle": "collapse", "data-target": "#ean-" + item.ean})
-        .text("Name: " + item.name));
-    var inner = $("<div>", {"id": "ean-" + item.ean, "class": "collapse in"});
+                            "data-toggle": "collapse", "data-target": "#ean-" + item.item.ean})
+        .text("Name: " + item.item.name));
+    var inner = $("<div>", {"id": "ean-" + item.item.ean, "class": "collapse in"});
     outer.append(inner);
     inner.append($("<p>").text("Ingredient type: " + item.item.ingredient.type));
     inner.append($("<p>").addClass("remaining").text("Number remaining: " + item.remaining));
     inner.append($("<p>").text("Size: " + item.item.size + " " + item.item.ingredient.unit));
-    inner.append($("<p>").text("EAN: " + item.ean));
+    inner.append($("<p>").text("EAN: " + item.item.ean));
     inner.append($("<p>").text("Description: " + item.item.description));
     inner.append($("<p>").text("Properties:"));
     var ul = $("<ul>");
