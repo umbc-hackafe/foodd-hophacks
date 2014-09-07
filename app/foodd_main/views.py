@@ -104,7 +104,7 @@ def UserCreateView(request):
             # We can say registration was successful.
             registered = True
 
-            return shortcuts.redirect("create-pantry")
+            return shortcuts.redirect("home")
 
         # Invalid form(s) - just print errors to the terminal.
         else:
