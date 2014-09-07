@@ -7,7 +7,13 @@ class PantryItemInline(admin.TabularInline):
 class PantryAdmin(admin.ModelAdmin):
     inlines = [PantryItemInline,]
 
-admin.site.register(FooddUser)
+class PantryMembershipInline(admin.TabularInline):
+    model = PantryMembership
+
+class UserAdmin(admin.ModelAdmin):
+    inlines = [PantryMembershipInline]
+
+admin.site.register(FooddUser, UserAdmin)
 admin.site.register(Property)
 admin.site.register(Ingredient)
 admin.site.register(Item)
