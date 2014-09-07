@@ -5,37 +5,6 @@
 <div class="page-header">
     <h1>{{ pantry.name }}</h1>
 </div>
-<div id="pantry-items" class="list-group">
-    <p class="list-group-item active">Items In This Pantry</p>
-    {% for item in pantry_items %}
-        <div class="list-group-item">
-            <h4 class="list-group-item-heading" type="button" data-toggle="collapse"
-                data-target="#ean-{{ item.item.ean }}">Name: {{ item.item.name }}</h4>
-            <div id="ean-{{ item.item.ean }}" class="collapse in">
-                <p>Ingredient type: {{ item.item.ingredient.name }}</p>
-                <p class="remaining">Number remaining: {{ item.remaining }}</p>
-                <p>Size: {{ item.item.size }} {{ item.item.ingredient.unit }}</p>
-                <p>EAN: {{ item.item.ean }}</p>
-                <p>Description: {{ item.item.description }}</p>
-                <p>Properties:</p>
-                <ul>
-                    {% for property in item.item.ingredient.properties.all %}
-                    <li>
-                        <p>Name: {{ property.name }}</p>
-                        <p>Description: {{ property.description }}</p>
-                    </li>
-                    {% endfor %}
-                </ul>
-                <p>Provides:</p>
-                <ul>
-                    {% for ing in item.item.ingredient.provides.all %}
-                    <li>Name: {{ ing.name }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    {% endfor %}
-</div>
 <form role="form" id="eanform" method="post" action="{% url "PantryItemAdd" %}" data-autocomplete-url="{% url "ItemAutocomplete" %}">
     {% csrf_token %}
     <input type="hidden" name="pk" value="{{ pantry.pk }}" />
@@ -49,45 +18,25 @@
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </form>
+<hr/>
+<div id="pantry-items" class="list-group">
+    <p class="list-group-item active">Items In This Pantry</p>
+    {% for item in pantry_items %}
+      {% if item.item.ean %}
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading" type="button" data-toggle="collapse"
+                data-target="#ean-{{ item.item.ean }}">Name: {{ item.item.name }}</h4>
+            <div id="ean-{{ item.item.ean }}" class="collapse in">
+                <p>Description: {{ item.item.description }}</p>
+                <p class="remaining">Number remaining: {{ item.remaining }}</p>
+                <p>Size: {{ item.item.size }} {{ item.item.ingredient.unit }}</p>
+            </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+</div>
 {% endblock content %}
 
 {% block bootstrap3_extra_script %}
-<script>
-function list_added_pantry_item(item) {
-    var outer = $("<div>", {"class": "list-group-item"});
-    outer.append($("<h4>", {"class": "list-group-item-heading", "type": "button",
-                            "data-toggle": "collapse", "data-target": "#ean-" + item.item.ean})
-        .text("Name: " + item.item.name));
-    var inner = $("<div>", {"id": "ean-" + item.item.ean, "class": "collapse in"});
-    outer.append(inner);
-    inner.append($("<p>").text("Ingredient type: " + item.item.ingredient.type));
-    inner.append($("<p>").addClass("remaining").text("Number remaining: " + item.remaining));
-    inner.append($("<p>").text("Size: " + item.item.size + " " + item.item.ingredient.unit));
-    inner.append($("<p>").text("EAN: " + item.item.ean));
-    inner.append($("<p>").text("Description: " + item.item.description));
-    inner.append($("<p>").text("Properties:"));
-    var ul = $("<ul>");
-    inner.append(ul);
-    if (item.item.ingredient && item.item.ingredient.properties.length) {
-        $.each(item.item.ingredient.properties, function(prop) {
-            var li = $("<li>");
-            ul.append(li);
-            li.append($("<p>").text("Name: " + prop.name));
-            li.append($("<p>").text("Description: " + prop.description));
-    });
-    }
-    inner.append($("<p>").text("Provides:"));
-    var ul = $("<ul>");
-    inner.append(ul);
-
-    if (item.item.ingredient && item.item.ingredient.properties.length) {
-        $.each(item.item.ingredient.properties, function(prop) {
-            ul.append($("<li>").text("Name: " + prop.name));
-        });
-    }
-    $("#pantry-items").append(outer);
-    return outer;
-}
-</script>
 <script type="text/javascript" src="{% static "js/pantry.js" %}"></script>
 {% endblock %}
