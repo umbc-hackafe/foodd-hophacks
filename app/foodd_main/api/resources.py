@@ -8,9 +8,9 @@ class IngredientResource(resources.ModelResource):
         allowed_methods = ['get']
         filtering = {
             'id': 'exact',
-            'properties': ALL,
+            'properties': resources.ALL,
             'unit': 'exact',
-            'provides': ALL
+            'provides': resources.ALL
         }
 
 class PropertyResource(resources.ModelResource):
