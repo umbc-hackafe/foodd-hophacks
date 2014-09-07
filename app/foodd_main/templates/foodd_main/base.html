@@ -25,8 +25,8 @@
                     <a href="#" class="dropdown-toggle {% if not user.is_authenticated %}disabled{% endif %}"
                         data-toggle="dropdown">Pantries <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        {% for pantry in user.pantries %}
-                          <li><a href="#">{{ pantry.name }}</a></li>
+                        {% for pantry in foodduser.pantries.all %}
+                        <li><a href="{% url "pantry" pk=pantry.pk %}">{{ pantry.name }}</a></li>
                         {% empty %}
                           <li class="disabled"><a href="#">No Pantries</a></li>
                         {% endfor %}

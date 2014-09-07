@@ -115,6 +115,7 @@ TEMPLATE_DIRS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.request",
+    "foodd_main.context_processors.find_foodduser",
 )
 
 INSTALLED_APPS = (
