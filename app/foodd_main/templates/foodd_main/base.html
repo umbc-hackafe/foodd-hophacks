@@ -25,13 +25,13 @@
                     <a href="#" class="dropdown-toggle {% if not user.is_authenticated %}disabled{% endif %}"
                         data-toggle="dropdown">Pantries <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        {% for pantry in user.pantry %}
+                        {% for pantry in user.pantries %}
                           <li><a href="#">{{ pantry.name }}</a></li>
                         {% empty %}
                           <li class="disabled"><a href="#">No Pantries</a></li>
                         {% endfor %}
                         <li class="divider"></li>
-                        <li><a href="#">
+                        <li><a href="{% url "create-pantry" %}">
                             <span class="glyphicon glyphicon-plus-sign"></span>
                             Add Another
                             </a></li>
@@ -55,7 +55,7 @@
                 </li>
                 {% else %}
                 <li>
-                    <a href="{% comment %}{% url "create-account" %}{% endcomment %}" class="btn navbar-btn">Register</a>
+                    <a href="{% url "create-account" %}" class="btn navbar-btn">Register</a>
                 </li>
                 <li>
                     <a href="{% url "login" %}?next={{ request.get_full_path }}" class="btn navbar-btn">Log In</a>
