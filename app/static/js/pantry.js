@@ -4,10 +4,11 @@ function list_added_pantry_item(item) {
                             "data-toggle": "collapse", "data-target": "#ean-" + item.ean}).text("Name: " + item.name).append($("<a>", {"class": "deletebtn pull-right", "href": "#", "data-target": "#ean-" + item.ean}).append($("<span>", {"class": "glyphicon glyphicon-trash"}))));
     var inner = $("<div>", {"id": "ean-" + item.ean, "class": "collapse in"});
     outer.append(inner);
-    if (item.remaining)
-	inner.append($("<p>").addClass("remaining").append($("<span>", {"class": "remaining", "data-remaining": item.remaining}).text("Number remaining: ")));
-    if (item.item.size)
-	inner.append($("<p>").text("Size: " + item.item.size + " " + item.item.ingredient.unit));
+    if (!item.remainin)
+	item.remaining = 1;
+    inner.append($("<p>").text("Number remaining: ").append($("<span>", {"class": "remaining", "data-remaining": item.remaining}).text(item.remaining)));
+    if (item.size)
+	inner.append($("<p>").text("Size: " + item.size));
     $("#pantry-items").prepend(outer);
     return outer;
 }

@@ -69,6 +69,7 @@ def PantryItemAdd(request):
         "ean": None,
         "name": None,
         "ean": None,
+        "size": 0,
         "item": {
             "description": None,
             "name": None,
@@ -86,6 +87,7 @@ def PantryItemAdd(request):
         dic["pk"] = pantry_item.pk
 
         inner_item = pantry_item.item
+        dic["size"] = getattr(inner_item, "size") or 0
 
         dic["name"] = inner_item.name
         dic["item"]["description"] = inner_item.description

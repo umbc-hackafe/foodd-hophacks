@@ -80,8 +80,8 @@ NeedsData."""
                 item = cls(
                         ean         = ean,
                         name        = response['description'],
-                        description = response['nutrition'] or "",
-                        size        = int(float(response['uom'].split(' ',1)[0])))
+                        description = response['nutrition'] or response['ingredients'] or "",
+                        size        = 0 if 'uom' not in response or not response['uom'] else int(float(response['uom'].split(' ',1)[0])))
                 item.save()
                 return item
             else:
