@@ -123,6 +123,12 @@ class PantryCreateView(generic.edit.CreateView, LoginRequiredMixin):
     form_class = forms.PantryForm
     success_url = "/"
 
+    def form_valid(self, form):
+        self.request.user.pantries.add(form.save())
+        self.request.user.save()
+        self.request.user.save_m2m()
+        return super(ContactView, self).form_valid(form)
+
 def EANInfo(request, ean):
     return http.HttpResponse(status=501)
     return http.HttpResponse(serializers.serialize('json', item),
