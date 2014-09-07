@@ -4,7 +4,7 @@ from django import shortcuts
 from django.core import serializers
 from django.core import exceptions
 from django.db.models import Q
-from django.contrib.auth import decorators
+from django.contrib.auth import decorators, authenticate, login
 import foodd_main.models as models
 from foodd_main import forms
 import logging
@@ -103,6 +103,8 @@ def UserCreateView(request):
 
             # We can say registration was successful.
             registered = True
+
+            return shortcuts.redirect("create-pantry")
 
         # Invalid form(s) - just print errors to the terminal.
         else:
